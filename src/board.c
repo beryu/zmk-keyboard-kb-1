@@ -6,14 +6,10 @@
 #if IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
 
 #include <zephyr/kernel.h>
-#include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/conn.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/input/input.h>
-#include <zmk/events/keycode_state_changed.h>
 #include <zmk/events/position_state_changed.h>
-#include <zmk/events/activity_state_changed.h>
-#include <zmk/events/split_peripheral_status_changed.h>
 #include <zmk/usb.h>
 
 LOG_MODULE_REGISTER(split_power_mgmt, CONFIG_ZMK_LOG_LEVEL);
@@ -42,17 +38,43 @@ static struct k_work_delayable power_mode_work;
 static enum power_mode current_mode = POWER_MODE_ACTIVE;
 static int64_t last_activity_time = 0;
 static struct bt_conn *split_conn = NULL;
+K_MUTEX_DEFINE(power_state_mutex);
+
+static bool update_mode_if_connected(struct bt_conn *conn, enum power_mode mode) {
+    bool connected;
+
+    k_mutex_lock(&power_state_mutex, K_FOREVER);
+    connected = (split_conn == conn);
+    if (connected) {
+        current_mode = mode;
+    }
+    k_mutex_unlock(&power_state_mutex);
+
+    return connected;
+}
 
 // Power mode transition handler
 static void power_mode_transition(struct k_work *work) {
-    if (!split_conn) {
+    struct bt_conn *conn;
+    enum power_mode mode;
+    int64_t activity_time;
+
+    ARG_UNUSED(work);
+
+    k_mutex_lock(&power_state_mutex, K_FOREVER);
+    conn = split_conn == NULL ? NULL : bt_conn_ref(split_conn);
+    mode = current_mode;
+    activity_time = last_activity_time;
+    k_mutex_unlock(&power_state_mutex);
+
+    if (conn == NULL) {
         return;
     }
     
     // Stay in active mode when USB power is connected
     if (zmk_usb_is_powered()) {
         LOG_DBG("USB power detected, staying in active mode");
-        if (current_mode != POWER_MODE_ACTIVE) {
+        if (mode != POWER_MODE_ACTIVE) {
             // Return to active mode
             struct bt_le_conn_param param = {
                 .interval_min = ACTIVE_CONN_INTERVAL,
@@ -61,19 +83,20 @@ static void power_mode_transition(struct k_work *work) {
                 .timeout = SUPERVISION_TIMEOUT,
             };
             
-            int err = bt_conn_le_param_update(split_conn, &param);
+            int err = bt_conn_le_param_update(conn, &param);
             if (err == 0) {
-                current_mode = POWER_MODE_ACTIVE;
+                update_mode_if_connected(conn, POWER_MODE_ACTIVE);
                 LOG_INF("Returned to active mode due to USB power");
             }
         }
         
         // Periodic check while USB power is present
         k_work_schedule(&power_mode_work, K_MSEC(5000));
+        bt_conn_unref(conn);
         return;
     }
     
-    int64_t idle_time = k_uptime_get() - last_activity_time;
+    int64_t idle_time = k_uptime_get() - activity_time;
     enum power_mode target_mode;
     
     // Determine target mode based on idle time
@@ -88,10 +111,10 @@ static void power_mode_transition(struct k_work *work) {
     }
     
     // Only update if different from current mode
-    if (target_mode == current_mode) {
+    if (target_mode == mode) {
         // Schedule next transition
         int32_t next_timeout;
-        switch (current_mode) {
+        switch (mode) {
         case POWER_MODE_ACTIVE:
             next_timeout = SLEEP1_TIMEOUT_MS - idle_time;
             break;
@@ -102,12 +125,14 @@ static void power_mode_transition(struct k_work *work) {
             next_timeout = SLEEP3_TIMEOUT_MS - idle_time;
             break;
         default:
+            bt_conn_unref(conn);
             return; // No further transitions from SLEEP3
         }
         
         if (next_timeout > 0) {
             k_work_schedule(&power_mode_work, K_MSEC(next_timeout));
         }
+        bt_conn_unref(conn);
         return;
     }
     
@@ -142,14 +167,14 @@ static void power_mode_transition(struct k_work *work) {
     
     LOG_INF("Entering %s mode - updating connection parameters", mode_name);
     
-    int err = bt_conn_le_param_update(split_conn, &param);
+    int err = bt_conn_le_param_update(conn, &param);
     if (err == 0) {
-        current_mode = target_mode;
+        bool connected = update_mode_if_connected(conn, target_mode);
         LOG_INF("%s mode activated", mode_name);
         
         // Schedule next transition
         int32_t next_timeout;
-        switch (current_mode) {
+        switch (target_mode) {
         case POWER_MODE_ACTIVE:
             next_timeout = SLEEP1_TIMEOUT_MS - idle_time;
             break;
@@ -160,33 +185,50 @@ static void power_mode_transition(struct k_work *work) {
             next_timeout = SLEEP3_TIMEOUT_MS - idle_time;
             break;
         default:
+            bt_conn_unref(conn);
             return; // No further transitions from SLEEP3
         }
         
-        if (next_timeout > 0) {
+        if (connected && next_timeout > 0) {
             k_work_schedule(&power_mode_work, K_MSEC(next_timeout));
         }
     } else {
         LOG_WRN("Failed to update connection parameters for %s mode: %d", mode_name, err);
     }
+
+    bt_conn_unref(conn);
 }
 
 // Reset activity timer on user input
 static void reset_idle_timer(void) {
+    enum power_mode mode;
+    bool connected;
+
     LOG_DBG("Activity detected - resetting idle timer");
+
+    k_mutex_lock(&power_state_mutex, K_FOREVER);
     last_activity_time = k_uptime_get();
-    k_work_cancel_delayable(&power_mode_work);
+    mode = current_mode;
+    connected = (split_conn != NULL);
+    k_mutex_unlock(&power_state_mutex);
+
+    if (!connected) {
+        k_work_cancel_delayable(&power_mode_work);
+        return;
+    }
     
-    if (current_mode != POWER_MODE_ACTIVE) {
-        // Return to active mode immediately
-        power_mode_transition(&power_mode_work.work);
+    if (mode != POWER_MODE_ACTIVE) {
+        // Queue an immediate transition instead of calling the work handler
+        // directly, which could race with an already-running transition.
+        k_work_reschedule(&power_mode_work, K_NO_WAIT);
     } else {
         // Schedule transition to SLEEP1 from active mode
-        k_work_schedule(&power_mode_work, K_MSEC(SLEEP1_TIMEOUT_MS));
+        k_work_reschedule(&power_mode_work, K_MSEC(SLEEP1_TIMEOUT_MS));
     }
 }
 
 static int position_state_changed_listener(const zmk_event_t *eh) {
+    ARG_UNUSED(eh);
     reset_idle_timer();
     return ZMK_EV_EVENT_BUBBLE;
 }
@@ -205,31 +247,46 @@ static bool is_split_peripheral_conn(struct bt_conn *conn) {
 }
 
 static void power_mgmt_bt_conn_connected_cb(struct bt_conn *conn, uint8_t err) {
+    struct bt_conn *old_conn;
+
     if (err || !is_split_peripheral_conn(conn)) {
         return;
     }
     
     LOG_INF("Split peripheral connection detected");
-    if (split_conn) {
-        bt_conn_unref(split_conn);
-    }
+
+    k_mutex_lock(&power_state_mutex, K_FOREVER);
+    old_conn = split_conn;
     split_conn = bt_conn_ref(conn);
-    
     last_activity_time = k_uptime_get();
-    k_work_schedule(&power_mode_work, K_MSEC(SLEEP1_TIMEOUT_MS));
+    current_mode = POWER_MODE_ACTIVE;
+    k_mutex_unlock(&power_state_mutex);
+
+    if (old_conn != NULL) {
+        bt_conn_unref(old_conn);
+    }
+
+    k_work_reschedule(&power_mode_work, K_MSEC(SLEEP1_TIMEOUT_MS));
 }
 
 static void power_mgmt_bt_conn_disconnected_cb(struct bt_conn *conn, uint8_t reason) {
+    struct bt_conn *old_conn;
+
+    k_mutex_lock(&power_state_mutex, K_FOREVER);
     if (conn != split_conn) {
+        k_mutex_unlock(&power_state_mutex);
         return;
     }
-    
-    LOG_INF("Split peripheral disconnected (reason: %d)", reason);
-    
-    k_work_cancel_delayable(&power_mode_work);
-    bt_conn_unref(split_conn);
+
+    old_conn = split_conn;
     split_conn = NULL;
     current_mode = POWER_MODE_ACTIVE;
+    k_mutex_unlock(&power_state_mutex);
+
+    LOG_INF("Split peripheral disconnected (reason: %d)", reason);
+
+    k_work_cancel_delayable(&power_mode_work);
+    bt_conn_unref(old_conn);
 }
 
 static struct bt_conn_cb power_mgmt_bt_conn_callbacks = {
@@ -238,18 +295,27 @@ static struct bt_conn_cb power_mgmt_bt_conn_callbacks = {
 };
 
 static void mouse_input_callback(struct input_event *evt) {
+    ARG_UNUSED(evt);
     reset_idle_timer();
 }
 
 static int split_power_mgmt_init(void) {
+    bool connected;
+
     LOG_INF("Initializing split power management");
     
     k_work_init_delayable(&power_mode_work, power_mode_transition);
     
     bt_conn_cb_register(&power_mgmt_bt_conn_callbacks);
     
-    if (split_conn) {
+    k_mutex_lock(&power_state_mutex, K_FOREVER);
+    connected = (split_conn != NULL);
+    if (connected) {
         last_activity_time = k_uptime_get();
+    }
+    k_mutex_unlock(&power_state_mutex);
+
+    if (connected) {
         k_work_schedule(&power_mode_work, K_MSEC(SLEEP1_TIMEOUT_MS));
         LOG_INF("Split power management initialized with existing connection");
     } else {
