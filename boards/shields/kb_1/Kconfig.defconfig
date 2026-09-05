@@ -1,8 +1,8 @@
 
-if SHIELD_TORABO_TSUKI_LP_LEFT || SHIELD_TORABO_TSUKI_LP_RIGHT
+if SHIELD_KB_1_LEFT || SHIELD_KB_1_RIGHT
 
 config ZMK_KEYBOARD_NAME
-    default "torabo-tsuki"
+    default "kb-1"
 
 config ZMK_SPLIT
     default y

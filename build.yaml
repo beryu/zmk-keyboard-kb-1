@@ -1,27 +1,20 @@
 include:
-  # - board: bmp_boost
-  #   shield: torabo_tsuki_lp_left
-  #   snippet: "studio-rpc-usb-uart split-central input-trackball input-listener"
-  #   artifact-name: torabo_tsuki_lp_left_central
-  # - board: bmp_boost
-  #   shield: torabo_tsuki_lp_right
-  #   snippet: studio-rpc-usb-uart
-  #   artifact-name: torabo_tsuki_lp_right_peripheral
-  - board: bmp_boost
-    shield: torabo_tsuki_lp_left
-    snippet: studio-rpc-usb-uart
-    artifact-name: torabo_tsuki_lp_left_peripheral
-  - board: bmp_boost
-    shield: torabo_tsuki_lp_right
+  - board: xiao_ble
+    shield: kb_1_left
     snippet: "studio-rpc-usb-uart split-central input-trackball input-listener"
-    artifact-name: torabo_tsuki_lp_right_central
-  # - board: bmp_boost
-  #   shield: torabo_tsuki_lp_left
-  #   snippet: "studio-rpc-usb-uart input-trackball input-split"
-  #   artifact-name: torabo_tsuki_lp_double_ball_left_peripheral
-  # - board: bmp_boost
-  #   shield: torabo_tsuki_lp_right
-  #   snippet: "studio-rpc-usb-uart split-central input-trackball input-listener input-split-listener"
-  #   artifact-name: torabo_tsuki_lp_double_ball_right_central
-  - board: bmp_boost
+    artifact-name: kb_1_left_central
+  - board: xiao_ble
+    shield: kb_1_right
+    snippet: studio-rpc-usb-uart
+    artifact-name: kb_1_right_peripheral
+  - board: xiao_ble
+    shield: kb_1_left
+    snippet: studio-rpc-usb-uart
+    artifact-name: kb_1_left_peripheral
+  - board: xiao_ble
+    shield: kb_1_right
+    snippet: "studio-rpc-usb-uart split-central input-trackball input-listener"
+    artifact-name: kb_1_right_central
+  - board: xiao_ble
     shield: settings_reset
+    artifact-name: settings_reset

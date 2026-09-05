@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: claude-codebox-for-trabo-tsuki-lp
+    container_name: kb-1-zmk-dev
     working_dir: /workspace
     volumes:
       - ./:/workspace

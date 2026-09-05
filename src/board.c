@@ -259,7 +259,7 @@ static int split_power_mgmt_init(void) {
     return 0;
 }
 
-INPUT_CALLBACK_DEFINE(DEVICE_DT_GET_OR_NULL(DT_NODELABEL(trackball)), mouse_input_callback);
+INPUT_CALLBACK_DEFINE(DEVICE_DT_GET_OR_NULL(DT_NODELABEL(pointing_device)), mouse_input_callback);
 
 SYS_INIT(split_power_mgmt_init, APPLICATION, CONFIG_APPLICATION_INIT_PRIORITY);
 
