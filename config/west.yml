@@ -11,9 +11,9 @@ manifest:
       import: app/west.yml
     - name: zmk-driver-paw3222
       url: https://github.com/beryu/zmk-driver-paw3222-kb-1
-      revision: b0e773792c574e2556e962e05313ed3ad62e8049
+      revision: f69222cc564e50d482e40e4e776f719c2a6a1448
     - name: zmk-feature-non-lipo-battery-management
       remote: sekigon-gonnoc
-      revision: main
+      revision: 43fa56fb7d1e065393e926b6caa0ea02cb86eca7
   self:
     path: config
