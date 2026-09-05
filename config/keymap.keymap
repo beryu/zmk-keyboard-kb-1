@@ -1,5 +1,5 @@
-#define ZMK_POINTING_DEFAULT_MOVE_VAL 600  // default: 600
-#define ZMK_POINTING_DEFAULT_SCRL_VAL 10    // default: 10
+#define ZMK_POINTING_DEFAULT_MOVE_VAL 600
+#define ZMK_POINTING_DEFAULT_SCRL_VAL 10
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/bt.h>
@@ -7,46 +7,33 @@
 #include <dt-bindings/zmk/pointing.h>
 
 / {
-    combos {
-        compatible = "zmk,combos";
-
-        bt_clear {
-            bindings = <&bt BT_CLR>;
-            key-positions = <28 29>;
-            layers = <2>;
-        };
-    };
-
     keymap {
         compatible = "zmk,keymap";
 
         layer_0 {
             bindings = <
-&trans  &trans            &trans      &trans   &trans                     &trans                                             &trans                    &trans  &trans     &trans   &trans            &trans
-&trans  &kp Q             &kp W       &kp E    &kp R                      &kp T                                              &kp Y                     &kp U   &kp I      &kp O    &kp P             &trans
-&trans  &kp A             &kp S       &kp D    &kp F                      &kp G                    &trans     &trans         &kp H                     &kp J   &kp K      &kp L    &kp MINUS         &trans
-&trans  &kp Z             &kp X       &kp C    &kp V                      &kp B                    &kp SPACE  &kp BACKSPACE  &kp N                     &kp M   &kp COMMA  &kp DOT  &kp SLASH         &trans
-&trans  &kp LEFT_CONTROL  &kp ESCAPE  &kp TAB  &mt LEFT_SHIFT LANGUAGE_2  &mt LEFT_ALT LANGUAGE_2  &mo 1      &kp ENTER      &mt RIGHT_GUI LANGUAGE_1  &trans  &trans     &mo 2    &kp SINGLE_QUOTE  &trans
+&kp ESCAPE        &kp Q         &kp W       &kp E       &kp R                    &kp T                     &kp Y      &kp U                    &kp I      &kp O      &kp P              &kp BACKSPACE
+&kp TAB           &kp A         &kp S       &kp D       &kp F                    &kp G                     &kp H      &kp J                    &kp K      &kp L      &kp MINUS          &kp SINGLE_QUOTE
+&kp LEFT_CONTROL  &kp Z         &kp X       &kp C       &kp V                    &kp B       &kp SPACE    &kp BACKSPACE  &kp N      &kp M                    &kp COMMA  &kp DOT    &kp SLASH          &kp ENTER
+&trans            &trans        &trans      &mt LEFT_SHIFT LANGUAGE_2            &mt LEFT_ALT LANGUAGE_2   &mo 1       &kp SPACE      &kp ENTER  &mt RIGHT_GUI LANGUAGE_1  &mo 2       &trans
             >;
         };
 
         layer_1 {
             bindings = <
-&trans  &trans            &trans        &trans        &trans          &trans                                   &trans            &trans             &trans        &trans           &trans         &trans
-&trans  &kp NUMBER_1      &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4    &kp NUMBER_5                             &kp NUMBER_6      &kp NUMBER_7       &kp NUMBER_8  &kp NUMBER_9     &kp NUMBER_0   &trans
-&trans  &kp GRAVE         &mkp RCLK     &mkp LCLK     &mkp MCLK       &kp SINGLE_QUOTE  &trans     &trans      &kp LEFT_ARROW    &kp DOWN_ARROW     &kp UP_ARROW  &kp RIGHT_ARROW  &kp EQUAL      &trans
-&trans  &kp LEFT_ALT      &mkp RCLK     &mkp LCLK     &mkp MB3        &kp LEFT_ALT      &kp SPACE  &kp DELETE  &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp COLON     &kp SEMI         &kp BACKSLASH  &trans
-&trans  &kp LEFT_CONTROL  &kp LS(N9)    &kp LS(N0)    &kp LEFT_SHIFT  &mo 2             &trans     &kp RET     &kp RIGHT_GUI     &trans             &trans        &trans           &kp GRAVE      &trans
+&trans            &kp NUMBER_1  &kp NUMBER_2  &kp NUMBER_3  &kp NUMBER_4    &kp NUMBER_5                 &kp NUMBER_6      &kp NUMBER_7      &kp NUMBER_8  &kp NUMBER_9    &kp NUMBER_0   &trans
+&trans            &kp GRAVE     &mkp RCLK     &mkp LCLK     &mkp MCLK       &kp SINGLE_QUOTE             &kp LEFT_ARROW    &kp DOWN_ARROW    &kp UP_ARROW  &kp RIGHT_ARROW  &kp EQUAL      &trans
+&kp LEFT_CONTROL  &kp LEFT_ALT  &mkp RCLK     &mkp LCLK     &mkp MB3        &kp LEFT_ALT  &kp SPACE     &kp DELETE        &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp COLON     &kp SEMI        &kp BACKSLASH  &kp ENTER
+&trans            &trans        &trans        &kp LEFT_SHIFT               &mo 2         &trans        &kp SPACE         &kp ENTER         &kp RIGHT_GUI      &trans        &trans
             >;
         };
 
         layer_2 {
             bindings = <
-&trans  &trans                &trans                &trans            &trans             &trans                                      &trans            &trans      &trans            &trans            &trans            &trans
-&trans  &kp LS(NUMBER_1)      &kp LS(NUMBER_2)      &kp LS(NUMBER_3)  &kp LS(NUMBER_4)   &kp LS(NUMBER_5)                            &kp LS(NUMBER_6)  &kp LS(N7)  &kp LS(NUMBER_8)  &kp LS(NUMBER_9)  &kp LS(NUMBER_0)  &trans
-&trans  &bt BT_SEL 0          &bt BT_SEL 1          &bt BT_SEL 2      &bt BT_SEL 3       &kp F11           &trans        &trans      &kp F1            &kp F2      &kp F3            &kp F4            &kp F5            &trans
-&trans  &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC  &kp K_MUTE        &kp C_VOLUME_DOWN  &kp C_VOLUME_UP   &kp LEFT_GUI  &bt BT_CLR  &kp F6            &kp F7      &kp F8            &kp F9            &kp F10           &trans
-&trans  &kp LEFT_CONTROL      &mkp RCLK             &mkp LCLK         &trans             &trans            &trans        &mkp LCLK   &mkp RCLK         &trans      &trans            &trans            &trans            &trans
+&trans            &kp LS(NUMBER_1)  &kp LS(NUMBER_2)  &kp LS(NUMBER_3)  &kp LS(NUMBER_4)     &kp LS(NUMBER_5)              &kp LS(NUMBER_6)  &kp LS(N7)  &kp LS(NUMBER_8)  &kp LS(NUMBER_9)  &kp LS(NUMBER_0)  &trans
+&trans            &bt BT_SEL 0      &bt BT_SEL 1      &bt BT_SEL 2      &bt BT_SEL 3         &kp F11                       &kp F1            &kp F2      &kp F3            &kp F4            &kp F5            &trans
+&kp LEFT_CONTROL  &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC  &kp K_MUTE  &kp C_VOLUME_DOWN  &kp C_VOLUME_UP  &kp LEFT_GUI  &bt BT_CLR  &kp F6            &kp F7            &kp F8            &kp F9            &kp F10           &kp ENTER
+&trans            &mkp RCLK         &mkp LCLK         &trans           &trans               &trans        &trans       &mkp LCLK   &mkp RCLK         &trans            &trans
             >;
         };
     };

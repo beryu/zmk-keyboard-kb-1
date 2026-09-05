@@ -74,24 +74,22 @@ build_target() {
 # Main execution
 if [ "$1" == "all" ]; then
     # Build everything defined in build.yaml
-    build_target "torabo_tsuki_lp_left" "bmp_boost" "torabo_tsuki_lp_left_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET=studio-rpc-usb-uart"
-    build_target "torabo_tsuki_lp_right" "bmp_boost" "torabo_tsuki_lp_right_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
-    build_target "torabo_tsuki_lp_left" "bmp_boost" "torabo_tsuki_lp_left_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
-    build_target "torabo_tsuki_lp_right" "bmp_boost" "torabo_tsuki_lp_right_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET=studio-rpc-usb-uart"
-    build_target "torabo_tsuki_lp_left" "bmp_boost" "torabo_tsuki_lp_double_ball_left_peripheral" "-DSNIPPET='studio-rpc-usb-uart split-trackball'"
-    build_target "torabo_tsuki_lp_right" "bmp_boost" "torabo_tsuki_lp_double_ball_right_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-trackball-listner'"
-    build_target "settings_reset" "bmp_boost" "settings_reset" ""
+    build_target "kb_1_left" "xiao_ble//zmk" "kb_1_left_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-central input-trackball input-listener'"
+    build_target "kb_1_right" "xiao_ble//zmk" "kb_1_right_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
+    build_target "kb_1_left" "xiao_ble//zmk" "kb_1_left_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
+    build_target "kb_1_right" "xiao_ble//zmk" "kb_1_right_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-central input-trackball input-listener'"
+    build_target "settings_reset" "xiao_ble//zmk" "settings_reset" ""
 elif [ "$1" == "left" ]; then
-    build_target "torabo_tsuki_lp_left" "bmp_boost" "torabo_tsuki_lp_left_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET=studio-rpc-usb-uart"
+    build_target "kb_1_left" "xiao_ble//zmk" "kb_1_left_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-central input-trackball input-listener'"
 elif [ "$1" == "right" ]; then
-    build_target "torabo_tsuki_lp_right" "bmp_boost" "torabo_tsuki_lp_right_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
+    build_target "kb_1_right" "xiao_ble//zmk" "kb_1_right_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
 elif [ "$1" == "reset" ]; then
-    build_target "settings_reset" "bmp_boost" "settings_reset" ""
+    build_target "settings_reset" "xiao_ble//zmk" "settings_reset" ""
 elif [ -z "$1" ]; then
     echo "No arguments provided. Building default set (left_peripheral, right_central, settings_reset)..."
-    build_target "torabo_tsuki_lp_left" "bmp_boost" "torabo_tsuki_lp_left_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
-    build_target "torabo_tsuki_lp_right" "bmp_boost" "torabo_tsuki_lp_right_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET=studio-rpc-usb-uart"
-    build_target "settings_reset" "bmp_boost" "settings_reset" ""
+    build_target "kb_1_left" "xiao_ble//zmk" "kb_1_left_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
+    build_target "kb_1_right" "xiao_ble//zmk" "kb_1_right_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-central input-trackball input-listener'"
+    build_target "settings_reset" "xiao_ble//zmk" "settings_reset" ""
 else
     echo "Usage: $0 {all|left|right|reset}"
     echo "  all:   Build all main targets"

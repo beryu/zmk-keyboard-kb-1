@@ -1,0 +1,18 @@
+
+file_format: "1"
+id: kb_1
+name: kb-1
+type: shield
+url: https://github.com/beryu/kb-1
+requires:
+  - xiao
+features:
+  - keys
+  - pointing
+  - studio
+outputs:
+  - usb
+  - ble
+siblings:
+  - kb_1_left
+  - kb_1_right
