@@ -6,7 +6,7 @@ This repository builds ZMK firmware for the kb-1 split keyboard. The hardware so
 
 ## Hardware
 
-- Controller: Seeed Studio XIAO nRF52840 Plus (`xiao_ble//zmk`)
+- Controller: Seeed Studio XIAO nRF52840 Plus (`xiao_ble`)
 - Matrix: 5 rows x 7 columns per half, with 49 populated keys total
 - Pointing device: PAW3222 over three-wire SPI
 - Power: one AAA cell per half with an external 5 V boost circuit

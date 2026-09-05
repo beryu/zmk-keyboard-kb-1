@@ -74,22 +74,22 @@ build_target() {
 # Main execution
 if [ "$1" == "all" ]; then
     # Build everything defined in build.yaml
-    build_target "kb_1_left" "xiao_ble//zmk" "kb_1_left_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-central input-trackball input-listener'"
-    build_target "kb_1_right" "xiao_ble//zmk" "kb_1_right_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
-    build_target "kb_1_left" "xiao_ble//zmk" "kb_1_left_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
-    build_target "kb_1_right" "xiao_ble//zmk" "kb_1_right_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-central input-trackball input-listener'"
-    build_target "settings_reset" "xiao_ble//zmk" "settings_reset" ""
+    build_target "kb_1_left" "xiao_ble" "kb_1_left_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-central input-trackball input-listener'"
+    build_target "kb_1_right" "xiao_ble" "kb_1_right_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
+    build_target "kb_1_left" "xiao_ble" "kb_1_left_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
+    build_target "kb_1_right" "xiao_ble" "kb_1_right_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-central input-trackball input-listener'"
+    build_target "settings_reset" "xiao_ble" "settings_reset" ""
 elif [ "$1" == "left" ]; then
-    build_target "kb_1_left" "xiao_ble//zmk" "kb_1_left_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-central input-trackball input-listener'"
+    build_target "kb_1_left" "xiao_ble" "kb_1_left_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-central input-trackball input-listener'"
 elif [ "$1" == "right" ]; then
-    build_target "kb_1_right" "xiao_ble//zmk" "kb_1_right_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
+    build_target "kb_1_right" "xiao_ble" "kb_1_right_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
 elif [ "$1" == "reset" ]; then
-    build_target "settings_reset" "xiao_ble//zmk" "settings_reset" ""
+    build_target "settings_reset" "xiao_ble" "settings_reset" ""
 elif [ -z "$1" ]; then
     echo "No arguments provided. Building default set (left_peripheral, right_central, settings_reset)..."
-    build_target "kb_1_left" "xiao_ble//zmk" "kb_1_left_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
-    build_target "kb_1_right" "xiao_ble//zmk" "kb_1_right_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-central input-trackball input-listener'"
-    build_target "settings_reset" "xiao_ble//zmk" "settings_reset" ""
+    build_target "kb_1_left" "xiao_ble" "kb_1_left_peripheral" "-DSNIPPET=studio-rpc-usb-uart"
+    build_target "kb_1_right" "xiao_ble" "kb_1_right_central" "-DCONFIG_ZMK_SPLIT_ROLE_CENTRAL=y -DSNIPPET='studio-rpc-usb-uart split-central input-trackball input-listener'"
+    build_target "settings_reset" "xiao_ble" "settings_reset" ""
 else
     echo "Usage: $0 {all|left|right|reset}"
     echo "  all:   Build all main targets"

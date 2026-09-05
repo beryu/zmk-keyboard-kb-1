@@ -34,7 +34,7 @@ GitHub Actionsの成果物には次のUF2が含まれます。
 
 ## ビルド
 
-`build.yaml`を使用してGitHub ActionsまたはZMK CLIでビルドします。ボードターゲットは`xiao_ble//zmk`です。
+`build.yaml`を使用してGitHub ActionsまたはZMK CLIでビルドします。ボードターゲットは`xiao_ble`です。
 
 ## PCBとの対応
 
