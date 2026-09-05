@@ -4,16 +4,14 @@ manifest:
       url-base: https://github.com/zmkfirmware
     - name: sekigon-gonnoc
       url-base: https://github.com/sekigon-gonnoc
-    - name: beryu
-      url-base: https://github.com/beryu
   projects:
     - name: zmk
       remote: zmkfirmware
       revision: v0.3
       import: app/west.yml
     - name: zmk-driver-paw3222
-      remote: beryu
-      revision: 84653db18a28d868780bfb07b7fd6cac54d96d86
+      url: https://github.com/beryu/zmk-driver-paw3222-kb-1
+      revision: 7b35b318bd664cc8a2ff0b872d9ffce911697918
     - name: zmk-feature-non-lipo-battery-management
       remote: sekigon-gonnoc
       revision: main
