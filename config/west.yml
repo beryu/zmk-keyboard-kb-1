@@ -13,7 +13,7 @@ manifest:
       import: app/west.yml
     - name: zmk-driver-paw3222
       remote: beryu
-      revision: main
+      revision: 84653db18a28d868780bfb07b7fd6cac54d96d86
     - name: zmk-feature-non-lipo-battery-management
       remote: sekigon-gonnoc
       revision: main
