@@ -1,5 +1,2 @@
-if(CONFIG_SHIELD_KB_1_LEFT OR CONFIG_SHIELD_KB_1_RIGHT)
-  zephyr_library()
-  zephyr_include_directories(${APPLICATION_SOURCE_DIR}/include)
-  zephyr_library_sources(src/board.c)
-endif()
+# The minimal hardware-test build intentionally omits the board-specific
+# split power-management source so USB and the key matrix can be tested alone.
