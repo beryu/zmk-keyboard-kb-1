@@ -1,0 +1,3 @@
+name: adjacent-pin-test
+append:
+  EXTRA_DTC_OVERLAY_FILE: adjacent-pin-test.overlay

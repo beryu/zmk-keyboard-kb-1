@@ -1,5 +1,5 @@
 include:
   - board: xiao_ble
     shield: tester_xiao
-    snippet: "minimal-key-test"
-    artifact-name: xiao_gpio_direct_test
+    snippet: "minimal-key-test adjacent-pin-test"
+    artifact-name: xiao_adjacent_pin_test

@@ -1,0 +1,18 @@
+#include <zephyr/dt-bindings/gpio/gpio.h>
+
+/*
+ * Test only the two adjacent, standard XIAO edge pins D3 and D4.
+ * D3 is an active-low input. D4 is held low, so bridging the two pins
+ * produces a key event without needing to identify a separate GND pad.
+ */
+&kscan0 {
+    input-gpios = <&gpio0 29 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+};
+
+&gpio0 {
+    d4_test_low: d4_test_low {
+        gpio-hog;
+        gpios = <4 GPIO_ACTIVE_HIGH>;
+        output-low;
+    };
+};
