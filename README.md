@@ -34,7 +34,7 @@ GitHub Actionsの成果物には次のUF2が含まれます。
 
 ## ビルド
 
-`build.yaml`を使用してGitHub ActionsまたはZMK CLIでビルドします。ボードターゲットは`xiao_ble`です。
+`build.yaml`を使用してGitHub ActionsまたはZMK CLIでビルドします。ZMK v0.3でのボードターゲットは`seeeduino_xiao_ble`です。
 ZMK、PAW3222ドライバ、非LiPo電池管理モジュールは、再現可能なビルドのため`config/west.yml`でタグまたはコミットSHAへ固定しています。
 
 ## PCBとの対応
