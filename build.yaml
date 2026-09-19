@@ -2,4 +2,4 @@ include:
   - board: xiao_ble
     shield: tester_xiao
     snippet: "minimal-key-test adjacent-pin-test"
-    artifact-name: xiao_adjacent_pin_test
+    artifact-name: xiao_usb_self_test
