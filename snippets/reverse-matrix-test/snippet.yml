@@ -1,0 +1,4 @@
+name: reverse-matrix-test
+append:
+  EXTRA_CONF_FILE: reverse-matrix-test.conf
+  EXTRA_DTC_OVERLAY_FILE: reverse-matrix-test.overlay

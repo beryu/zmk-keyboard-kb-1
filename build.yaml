@@ -1,5 +1,5 @@
 include:
   - board: xiao_ble
     shield: kb_1_right
-    snippet: "minimal-key-test"
-    artifact-name: kb_1_right_minimal_key_test
+    snippet: "reverse-matrix-test"
+    artifact-name: kb_1_right_reverse_matrix_test
