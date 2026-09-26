@@ -1,18 +1,8 @@
 include:
   - board: seeeduino_xiao_ble
-    shield: kb_1_left
-    snippet: "studio-rpc-usb-uart split-central input-trackball input-listener"
-    artifact-name: kb_1_left_central
-  - board: seeeduino_xiao_ble
-    shield: kb_1_right
-    artifact-name: kb_1_right_peripheral
-  - board: seeeduino_xiao_ble
-    shield: kb_1_left
-    artifact-name: kb_1_left_peripheral
-  - board: seeeduino_xiao_ble
-    shield: kb_1_right
-    snippet: "studio-rpc-usb-uart split-central input-trackball input-listener"
-    artifact-name: kb_1_right_central
+    shield: kb_1
+    snippet: "input-trackball input-listener"
+    artifact-name: kb_1
   - board: seeeduino_xiao_ble
     shield: settings_reset
     artifact-name: settings_reset

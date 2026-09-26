@@ -2,8 +2,6 @@ manifest:
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
-    - name: sekigon-gonnoc
-      url-base: https://github.com/sekigon-gonnoc
   projects:
     - name: zmk
       remote: zmkfirmware
@@ -12,8 +10,5 @@ manifest:
     - name: zmk-driver-paw3222
       url: https://github.com/beryu/zmk-driver-paw3222-kb-1
       revision: f69222cc564e50d482e40e4e776f719c2a6a1448
-    - name: zmk-feature-non-lipo-battery-management
-      remote: sekigon-gonnoc
-      revision: 43fa56fb7d1e065393e926b6caa0ea02cb86eca7
   self:
     path: config

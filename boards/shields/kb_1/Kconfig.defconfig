@@ -1,11 +1,8 @@
 
-if SHIELD_KB_1_LEFT || SHIELD_KB_1_RIGHT
+if SHIELD_KB_1
 
 config ZMK_KEYBOARD_NAME
     default "kb-1"
-
-config ZMK_SPLIT
-    default y
 
 config SPI
     default y
