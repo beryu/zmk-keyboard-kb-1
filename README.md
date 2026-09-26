@@ -1,13 +1,6 @@
 # kb-1 ZMK firmware
 
-[kb-1](https://github.com/beryu/kb-1)用のZMKファームウェアです。
-
-## 対応ハードウェア
-
-- Seeed Studio XIAO nRF52840 Plus
-- 左右分割、49キー
-- PAW3222トラックボール
-- 単四電池と基板上の5V昇圧回路
+[kb-1](https://github.com/beryu/kb-1)用のZMKファームウェアです。現行の基板は左右を12極ケーブルで接続し、右側のSeeed Studio XIAO nRF52840 Plus 1個で全48キー（左26キー、右22キー）とPAW3222トラックボールを制御します。右側のUSB-Cから給電し、PCへのキー・ポインター入力はBluetoothで送信します。左側はコントローラーを持たない受動基板です。
 
 XIAO nRF52840 Sense Plusではなく、XIAO nRF52840 Plusを使用してください。
 
@@ -15,51 +8,34 @@ XIAO nRF52840 Sense Plusではなく、XIAO nRF52840 Plusを使用してくだ�
 
 GitHub Actionsの成果物には次のUF2が含まれます。
 
-- `kb_1_left_central.uf2`: 左側にトラックボールを取り付ける場合
-- `kb_1_right_peripheral.uf2`: 左側Centralと組み合わせる右側
-- `kb_1_right_central.uf2`: 右側にトラックボールを取り付ける場合
-- `kb_1_left_peripheral.uf2`: 右側Centralと組み合わせる左側
-- `settings_reset.uf2`: Bluetooth設定のリセット用
+- `kb_1.uf2`: 右側のXIAO用。左右のキーとトラックボールを制御
+- `settings_reset.uf2`: 右側XIAOのBluetooth設定をリセット
 
-トラックボールを取り付けた側に`_central`、反対側に対応する`_peripheral`を書き込んでください。
+左側へ書き込むファームウェアはありません。
 
-## 書き込み
+## 接続と書き込み
 
-1. キーボードから電池を外します。
-2. 電源スイッチをONにしてXIAOをUSB接続します。
-3. 電源スイッチを`ON → OFF → ON`と素早く2回操作し、UF2ブートローダーに入ります。
-4. マウントされたドライブへ対応するUF2をコピーします。
+1. 電源を外した状態で、左右の基板を対応する12極ケーブルで接続します。現行基板のコネクターとケーブル仕様は[基板設計リポジトリ](https://github.com/beryu/torabo-tsuki-om/blob/master/pcb/ffsd-migration.md)を参照してください。
+2. 右側XIAOのUSB-Cを電源に接続します。USBは給電とUF2書き込みに使用し、ZMKのUSBキーボード出力は無効です。
+3. 書き込む場合は右側XIAOのリセットを素早く2回押してUF2ブートローダーに入り、マウントされたドライブへ`kb_1.uf2`をコピーします。
+4. PCから`kb-1`にBluetooth接続します。ZMK StudioもBluetooth経由で使用できます。
 
-キーマップは[keymap-editor](https://nickcoutsos.github.io/keymap-editor/)または[ZMK Studio](https://zmk.studio/)で編集できます。
+キーマップは[keymap-editor](https://nickcoutsos.github.io/keymap-editor/)または[ZMK Studio](https://zmk.studio/)で編集できます。基板の変更に合わせて、右側の内側3段目のキーは配列から削除されています。Bluetoothペアリング解除の`BT_CLR`はレイヤー2の右上キーに配置しています。
 
 ## ビルド
 
-`build.yaml`を使用してGitHub ActionsまたはZMK CLIでビルドします。ZMK v0.3でのボードターゲットは`seeeduino_xiao_ble`です。
-ZMK、PAW3222ドライバ、非LiPo電池管理モジュールは、再現可能なビルドのため`config/west.yml`でタグまたはコミットSHAへ固定しています。
+`build.yaml`を使用してGitHub ActionsまたはZMK CLIでビルドします。ZMK v0.3でのボードターゲットは`seeeduino_xiao_ble`、シールドは`kb_1`です。ZMKとPAW3222ドライバは、再現可能なビルドのため`config/west.yml`でタグまたはコミットSHAへ固定しています。
 
 ## PCBとの対応
 
-GPIO割り当てはkb-1のKiCad基板データから生成された回路図を正としています。D14/P0.09は`COL0`として使用するため、devicetreeでNFCからGPIOへ切り替えています。
+GPIO割り当ては[現行のKiCad回路図](https://github.com/beryu/torabo-tsuki-om)の右側XIAOから採っています。左右間は行・列・GNDを直接配線し、ZMKの無線分割機能は使用しません。D14/P0.09とD15/P0.10をNFCからGPIOへ切り替えています。
 
 | 信号 | XIAO | nRF52840 GPIO |
 | --- | --- | --- |
-| VBAT_ADC | D0 | P0.02 / AIN0 |
-| ROW0 | D1 | P0.03 |
-| COL2 | D2 | P0.28 |
-| COL4 | D3 | P0.29 |
-| ROW3 | D4 | P0.04 |
-| COL6 | D5 | P0.05 |
-| センサー電源 | D6 | P1.11 |
-| CS | D7 | P1.12 |
-| SCLK | D8 | P1.13 |
-| MOTION | D9 | P1.14 |
-| SDIO | D10 | P1.15 |
-| ROW1 | D11 | P0.15 |
-| COL1 | D12 | P0.19 |
-| COL3 | D13 | P1.01 |
-| COL0 | D14 | P0.09 |
-| ROW4 | D17 | P1.03 |
-| ROW2 | D18 | P1.05 |
-| COL5 | D19 | P1.07 |
+| LROW0 / LROW1 / LROW2 / LROW3 | D0 / D1 / D6 / D15 | P0.02 / P0.03 / P1.11 / P0.10 |
+| RROW0 / RROW1 / RROW2 / RROW3 | D11 / D18 / D4 / D17 | P0.15 / P1.05 / P0.04 / P1.03 |
+| COL0 / COL1 / COL2 / COL3 | D14 / D12 / D2 / D13 | P0.09 / P0.19 / P0.28 / P1.01 |
+| COL4 / COL5 / COL6 | D3 / D19 / D5 | P0.29 / P1.07 / P0.05 |
+| CS / SCLK / MOTION / SDIO | D7 / D8 / D9 / D10 | P1.12 / P1.13 / P1.14 / P1.15 |
 
-現時点ではGitHub Actionsによるビルド検証までを対象としています。キー位置、分割接続、トラックボール、スリープ復帰、電池残量表示は実機での確認が必要です。電池残量のしきい値は実測値に合わせて校正してください。
+現時点ではビルド検証までを対象としています。キー位置、左右ケーブルの導通、トラックボール、Bluetooth接続は実機で確認してください。

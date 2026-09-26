@@ -11,8 +11,4 @@ features:
   - pointing
   - studio
 outputs:
-  - usb
   - ble
-siblings:
-  - kb_1_left
-  - kb_1_right
