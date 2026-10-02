@@ -9,6 +9,6 @@ manifest:
       import: app/west.yml
     - name: zmk-driver-paw3222
       url: https://github.com/beryu/zmk-driver-paw3222-kb-1
-      revision: f69222cc564e50d482e40e4e776f719c2a6a1448
+      revision: cd35d38e2b3f49bcd977ac299fd87349a59fed7d
   self:
     path: config
