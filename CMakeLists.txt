@@ -1,1 +1,2 @@
-# Shield-only module; no application sources are required.
+zephyr_library()
+zephyr_library_sources(src/trackball_diagnostics.c)

@@ -1,8 +1,8 @@
 include:
   - board: seeeduino_xiao_ble
     shield: kb_1
-    snippet: "input-trackball input-listener"
-    artifact-name: kb_1
+    snippet: "input-trackball input-listener zmk-usb-logging"
+    artifact-name: kb_1_trackball_diagnostics
   - board: seeeduino_xiao_ble
     shield: settings_reset
     artifact-name: settings_reset
