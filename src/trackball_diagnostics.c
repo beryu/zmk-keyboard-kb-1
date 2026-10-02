@@ -6,6 +6,7 @@
 
 LOG_MODULE_REGISTER(trackball_diagnostics, LOG_LEVEL_INF);
 #define SENSOR_NODE DT_NODELABEL(pointing_device)
+#if DT_NODE_EXISTS(SENSOR_NODE)
 
 static void report_sensor(void *a, void *b, void *c) {
     const struct device *sensor = DEVICE_DT_GET(SENSOR_NODE);
@@ -26,3 +27,5 @@ static void report_sensor(void *a, void *b, void *c) {
 
 K_THREAD_DEFINE(trackball_diagnostic_thread, 1024, report_sensor,
                 NULL, NULL, NULL, 10, 0, 0);
+
+#endif
