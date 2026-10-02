@@ -14,3 +14,7 @@
         irq-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
     };
 };
+
+/* Exclusive GPIO diagnostic access: do not initialize hardware SPI or PAW3222. */
+&spi2 { status = "disabled"; };
+&pointing_device { status = "disabled"; };
