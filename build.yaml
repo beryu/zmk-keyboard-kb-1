@@ -2,7 +2,7 @@ include:
   - board: seeeduino_xiao_ble
     shield: kb_1
     snippet: "input-trackball input-listener zmk-usb-logging"
-    artifact-name: kb_1_trackball_smooth_test
+    artifact-name: kb_1_trackball_low_latency_test
   - board: seeeduino_xiao_ble
     shield: settings_reset
     artifact-name: settings_reset
