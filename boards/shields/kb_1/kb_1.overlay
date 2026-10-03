@@ -4,4 +4,11 @@
 
 &pointing_listener {
     input-processors = <&zip_xy_transform (INPUT_TRANSFORM_X_INVERT | INPUT_TRANSFORM_Y_INVERT)>;
+
+    scroll_listener {
+        layers = <2>;
+        // The sensor driver already scales movement for scrolling on layer 2.
+        input-processors = <&zip_xy_to_scroll_mapper>
+                         , <&zip_scroll_transform INPUT_TRANSFORM_Y_INVERT>;
+    };
 };
