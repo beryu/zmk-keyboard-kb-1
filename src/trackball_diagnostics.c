@@ -14,6 +14,8 @@ LOG_MODULE_REGISTER(trackball_diagnostics, LOG_LEVEL_INF);
 /* Manufacturer sample: clock idle high, address output followed by SDIO input.
  * Deliberately slow clocks provide margin for manual assembly and the FFC. */
 static bool hold_cs;
+static unsigned int edge_us = 10;
+static unsigned int turnaround_us = 20;
 
 static void reset_bus(void) {
     nrf_gpio_pin_clear(CLK_PIN);
@@ -30,20 +32,21 @@ static uint8_t read_register(uint8_t address) {
     k_busy_wait(20);
     for (int bit = 7; bit >= 0; bit--) {
         nrf_gpio_pin_write(DATA_PIN, (address >> bit) & 1);
-        k_busy_wait(10);
+        k_busy_wait(edge_us);
         nrf_gpio_pin_clear(CLK_PIN);
-        k_busy_wait(10);
+        k_busy_wait(edge_us);
         nrf_gpio_pin_set(CLK_PIN);
-        k_busy_wait(10);
+        k_busy_wait(edge_us);
     }
     nrf_gpio_cfg_input(DATA_PIN, NRF_GPIO_PIN_NOPULL);
-    k_busy_wait(20);
+    k_busy_wait(turnaround_us);
     for (int bit = 7; bit >= 0; bit--) {
         nrf_gpio_pin_clear(CLK_PIN);
-        k_busy_wait(10);
+        k_busy_wait(edge_us);
         nrf_gpio_pin_set(CLK_PIN);
+        k_busy_wait(edge_us);
         value |= nrf_gpio_pin_read(DATA_PIN) << bit;
-        k_busy_wait(10);
+        k_busy_wait(edge_us);
     }
     if (!hold_cs) { nrf_gpio_pin_set(CS_PIN); }
     k_busy_wait(20);
@@ -59,21 +62,28 @@ static void report_sensor(void *a, void *b, void *c) {
     nrf_gpio_cfg_output(CLK_PIN);
     nrf_gpio_cfg_input(DATA_PIN, NRF_GPIO_PIN_NOPULL);
     nrf_gpio_cfg_input(MOT_PIN, NRF_GPIO_PIN_PULLUP);
-    LOG_INF("CS diagnostic v2: mode 2, SDIO input during read");
+    LOG_INF("Timing diagnostic v3: per-read CS, delayed data sampling");
+    static const unsigned int edges[] = { 1, 10, 50 };
+    static const unsigned int turns[] = { 5, 100 };
+    hold_cs = false;
     while (true) {
-        for (int strategy = 0; strategy < 2; strategy++) {
-            hold_cs = (strategy == 1);
-            nrf_gpio_pin_set(CS_PIN);
-            k_busy_wait(100);
-            if (hold_cs) { nrf_gpio_pin_clear(CS_PIN); }
-            reset_bus();
-            unsigned int id0 = read_register(0x00);
-            unsigned int id1 = read_register(0x01);
-            LOG_INF("cs=%s id0=0x%02x expected=0x30 id1=0x%02x motion_raw=%u",
-                    hold_cs ? "held-low" : "per-read", id0, id1,
-                    nrf_gpio_pin_read(MOT_PIN));
-            nrf_gpio_pin_set(CS_PIN);
-            k_sleep(K_MSEC(100));
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 2; j++) {
+                edge_us = edges[i];
+                turnaround_us = turns[j];
+                nrf_gpio_pin_set(CS_PIN);
+                reset_bus();
+                unsigned int valid = 0;
+                unsigned int id0 = 0, id1 = 0;
+                for (int attempt = 0; attempt < 10; attempt++) {
+                    id0 = read_register(0x00);
+                    id1 = read_register(0x01);
+                    if (id0 == 0x30 && id1 == 0x02) { valid++; }
+                    k_sleep(K_MSEC(10));
+                }
+                LOG_INF("edge_us=%u turnaround_us=%u valid=%u/10 last_id0=0x%02x last_id1=0x%02x",
+                        edge_us, turnaround_us, valid, id0, id1);
+            }
         }
         k_sleep(K_SECONDS(2));
     }
