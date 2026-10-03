@@ -62,9 +62,9 @@ static void report_sensor(void *a, void *b, void *c) {
     nrf_gpio_cfg_output(CLK_PIN);
     nrf_gpio_cfg_input(DATA_PIN, NRF_GPIO_PIN_NOPULL);
     nrf_gpio_cfg_input(MOT_PIN, NRF_GPIO_PIN_PULLUP);
-    LOG_INF("Timing diagnostic v3: per-read CS, delayed data sampling");
-    static const unsigned int edges[] = { 1, 10, 50 };
-    static const unsigned int turns[] = { 5, 100 };
+    LOG_INF("Timing diagnostic v4: per-read CS, delayed data sampling");
+    static const unsigned int edges[] = { 50, 100, 200 };
+    static const unsigned int turns[] = { 100, 300 };
     hold_cs = false;
     while (true) {
         for (int i = 0; i < 3; i++) {
@@ -73,16 +73,19 @@ static void report_sensor(void *a, void *b, void *c) {
                 turnaround_us = turns[j];
                 nrf_gpio_pin_set(CS_PIN);
                 reset_bus();
+                unsigned int first0 = read_register(0x00);
+                unsigned int first1 = read_register(0x01);
+                k_sleep(K_MSEC(10));
                 unsigned int valid = 0;
                 unsigned int id0 = 0, id1 = 0;
-                for (int attempt = 0; attempt < 10; attempt++) {
+                for (int attempt = 0; attempt < 20; attempt++) {
                     id0 = read_register(0x00);
                     id1 = read_register(0x01);
                     if (id0 == 0x30 && id1 == 0x02) { valid++; }
                     k_sleep(K_MSEC(10));
                 }
-                LOG_INF("edge_us=%u turnaround_us=%u valid=%u/10 last_id0=0x%02x last_id1=0x%02x",
-                        edge_us, turnaround_us, valid, id0, id1);
+                LOG_INF("edge_us=%u turnaround_us=%u valid=%u/20 first_id0=0x%02x first_id1=0x%02x last_id0=0x%02x last_id1=0x%02x",
+                        edge_us, turnaround_us, valid, first0, first1, id0, id1);
             }
         }
         k_sleep(K_SECONDS(2));
