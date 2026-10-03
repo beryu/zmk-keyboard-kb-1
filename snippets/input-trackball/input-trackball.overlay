@@ -9,6 +9,7 @@
     pointing_device: pointing_device@0 {
         status = "okay";
         compatible = "pixart,paw3222";
+        force-awake;
         reg = <0>;
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
