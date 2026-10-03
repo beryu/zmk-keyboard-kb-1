@@ -7,8 +7,9 @@
 
     scroll_listener {
         layers = <2>;
-        // The sensor driver already scales movement for scrolling on layer 2.
-        input-processors = <&zip_xy_to_scroll_mapper>
+        // Match torabo-tsuki-lp's additional scaling after driver acceleration.
+        input-processors = <&zip_xy_scaler 1 3>
+                         , <&zip_xy_to_scroll_mapper>
                          , <&zip_scroll_transform INPUT_TRANSFORM_Y_INVERT>;
     };
 };
