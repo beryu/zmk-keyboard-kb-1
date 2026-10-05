@@ -1,0 +1,51 @@
+--- a/app/src/ble.c
++++ b/app/src/ble.c
+@@ -285,24 +285,39 @@
+ #endif
+ }
+ 
++static int update_profile_advertising(void) {
++    int err = 0;
++    if (!zmk_ble_active_profile_is_connected()) {
++        // Restart advertising even when reselecting the same disconnected profile.
++        // Keep all existing connections and bond information intact.
++        CHECKED_ADV_STOP();
++    }
++    return update_advertising();
++}
++
+ int zmk_ble_prof_select(uint8_t index) {
+     if (index >= ZMK_BLE_PROFILE_COUNT) {
+         return -ERANGE;
+     }
+ 
+     LOG_DBG("profile %d", index);
+-    if (active_profile == index) {
++    bool profile_changed = active_profile != index;
++    if (!profile_changed && zmk_ble_active_profile_is_connected()) {
+         return 0;
+     }
+ 
+-    active_profile = index;
+-    ble_save_profile();
+-
+-    update_advertising();
+-
+-    raise_profile_changed_event();
+-
+-    return 0;
++    if (profile_changed) {
++        active_profile = index;
++        ble_save_profile();
++    }
++
++    int err = update_profile_advertising();
++
++    if (profile_changed) {
++        raise_profile_changed_event();
++    }
++
++    return err;
+ };
+ 
+ int zmk_ble_prof_next(void) {
