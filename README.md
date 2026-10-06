@@ -39,3 +39,15 @@ GPIO割り当ては[現行のKiCad回路図](https://github.com/beryu/torabo-tsu
 | CS / SCLK / MOTION / SDIO | D7 / D8 / D9 / D10 | P1.12 / P1.13 / P1.14 / P1.15 |
 
 現時点ではビルド検証までを対象としています。キー位置、左右ケーブルの導通、トラックボール、Bluetooth接続は実機で確認してください。
+
+## USB power LED
+
+The kb-1 firmware keeps the XIAO onboard blue LED on while the application is
+running. The current PCB is powered only through USB-C, so removing USB power
+also turns the LED off. This does not require USB enumeration or enable USB HID.
+The settings-reset firmware is unaffected.
+
+The LED is a power indicator and stays on independently of whether its added
+load prevents power-bank shutdown. It does not guarantee that a power bank will keep its
+output enabled. After flashing, verify the LED stays on and test both normal use
+and an extended idle period with the intended power bank.
