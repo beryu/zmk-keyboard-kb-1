@@ -13,3 +13,9 @@
                          , <&zip_scroll_transform INPUT_TRANSFORM_Y_INVERT>;
     };
 };
+
+/* GPIO diagnostic owns CS/SCLK/SDIO directly. Disable the regular PAW3222
+ * driver for this build only so two drivers never contend for the FFC bus. */
+&spi2 {
+    status = "disabled";
+};

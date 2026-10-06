@@ -1,8 +1,10 @@
 include:
   - board: seeeduino_xiao_ble
     shield: kb_1
-    snippet: "input-trackball input-listener"
-    artifact-name: kb_1
+    # Keep master unchanged except for USB serial diagnostics and the
+    # trackball bus being taken over by the diagnostic program below.
+    snippet: "input-trackball input-listener zmk-usb-logging"
+    artifact-name: kb_1_trackball_gpio_diagnostics
   - board: seeeduino_xiao_ble
     shield: settings_reset
     artifact-name: settings_reset
