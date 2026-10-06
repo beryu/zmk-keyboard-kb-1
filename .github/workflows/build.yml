@@ -4,3 +4,17 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build:
     uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3
+
+  ble-profile-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: zmkfirmware/zmk
+          ref: v0.3
+          path: upstream-zmk
+          sparse-checkout: app/src
+          persist-credentials: false
+      - name: Test BLE profile selection and patch application
+        run: python3 tests/test_ble_profile_selection.py upstream-zmk/app/src/ble.c

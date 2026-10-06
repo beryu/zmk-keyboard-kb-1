@@ -40,6 +40,12 @@ GPIO割り当ては[現行のKiCad回路図](https://github.com/beryu/torabo-tsu
 
 現時点ではビルド検証までを対象としています。キー位置、左右ケーブルの導通、トラックボール、Bluetooth接続は実機で確認してください。
 
+## Bluetooth再接続
+
+`BT_SEL n`で未接続のプロファイルを選択すると、Bluetooth広告を停止・再開して再接続を促します。同じ番号の選び直しでも再開するため、Macの再起動後に再接続できない場合の復旧操作として使用できます。選択先が接続済みなら接続を維持し、ペアリング情報も消去しません。キーボード側に誤った接続中の状態が残っている場合には復旧できないことがあります。
+
+この動作は`patches/zmk-ble-profile-advertising-restart.patch`をZMK v0.3へビルド時に適用します。再構成時には適用済みのパッチを検出し、ZMK更新により適用できなくなった場合はビルドを停止します。
+
 ## USB power LED
 
 The kb-1 firmware keeps the XIAO onboard blue LED on while the application is
