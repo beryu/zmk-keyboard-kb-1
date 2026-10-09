@@ -31,7 +31,7 @@
         layer_2 {
             bindings = <
 &trans            &kp LS(NUMBER_1)      &kp LS(NUMBER_2)      &kp LS(NUMBER_3)  &kp LS(NUMBER_4)   &kp LS(NUMBER_5)  &kp LS(NUMBER_6)  &kp LS(N7)  &kp LS(NUMBER_8)  &kp LS(NUMBER_9)  &kp LS(NUMBER_0)  &bt BT_CLR
-&trans            &bt BT_SEL 0          &bt BT_SEL 1          &bt BT_SEL 2      &bt BT_SEL 3       &kp F11           &kp F1            &kp F2      &kp F3            &kp F4            &kp F5            &kp F6
+&bt BT_SEL 4      &bt BT_SEL 0          &bt BT_SEL 1          &bt BT_SEL 2      &bt BT_SEL 3       &kp F11           &kp F1            &kp F2      &kp F3            &kp F4            &kp F5            &kp F6
 &kp LEFT_CONTROL  &kp C_BRIGHTNESS_DEC  &kp C_BRIGHTNESS_INC  &kp K_MUTE        &kp C_VOLUME_DOWN  &kp C_VOLUME_UP   &kp LEFT_GUI      &kp F7      &kp F8            &kp F9            &kp F10           &kp F11     &kp F12
 &mkp LCLK         &mkp RCLK             &mkp MCLK             &trans            &trans             &trans            &trans            &mkp LCLK   &mkp RCLK         &trans            &trans
             >;
