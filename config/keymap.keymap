@@ -24,7 +24,7 @@
 &trans            &kp NUMBER_1  &kp NUMBER_2      &kp NUMBER_3      &kp NUMBER_4    &kp NUMBER_5      &kp NUMBER_6    &kp NUMBER_7      &kp NUMBER_8       &kp NUMBER_9     &kp NUMBER_0  &kp DELETE
 &trans            &kp GRAVE     &mkp RCLK         &mkp LCLK         &mkp MCLK       &kp SINGLE_QUOTE  &kp LEFT_ARROW  &kp DOWN_ARROW    &kp UP_ARROW       &kp RIGHT_ARROW  &kp EQUAL     &trans
 &kp LEFT_CONTROL  &kp LEFT_ALT  &mkp RCLK         &mkp LCLK         &mkp MB3        &kp LEFT_ALT      &kp SPACE       &kp LEFT_BRACKET  &kp RIGHT_BRACKET  &kp COLON        &kp SEMI      &kp BACKSLASH  &trans
-&mkp LCLK         &mkp RCLK     &kp LS(NUMBER_9)  &kp LS(NUMBER_0)  &kp LEFT_SHIFT  &mo 2             &trans          &kp ENTER         &kp RIGHT_GUI      &trans           &trans
+&mkp MB4          &mkp MB5      &kp LS(NUMBER_9)  &kp LS(NUMBER_0)  &kp LEFT_SHIFT  &mo 2             &trans          &kp ENTER         &kp RIGHT_GUI      &trans           &trans
             >;
         };
 
