@@ -46,12 +46,25 @@ GPIO割り当ては[現行のKiCad回路図](https://github.com/beryu/torabo-tsu
 
 この動作は`patches/zmk-ble-profile-advertising-restart.patch`をZMK v0.3へビルド時に適用します。再構成時には適用済みのパッチを検出し、ZMK更新により適用できなくなった場合はビルドを停止します。
 
-## USB power LED
+## レイヤー表示LED
 
-The kb-1 firmware keeps the XIAO onboard blue LED on while the application is
-running. The current PCB is powered only through USB-C, so removing USB power
-also turns the LED off. This does not require USB enumeration or enable USB HID.
-The settings-reset firmware is unaffected.
+アプリケーション動作中は、XIAOの内蔵RGB LEDが有効なレイヤーに応じた色で常時点灯します。
+
+| レイヤー | 色 | 点灯するチャンネル |
+| --- | --- | --- |
+| 0 | 緑 | 緑 |
+| 1 | 黄 | 赤＋緑 |
+| 2 | マゼンタ | 赤＋青 |
+
+複数のレイヤーが有効な場合は、番号が最も大きいレイヤーの色を表示します。
+レイヤーキーを離すと、残っている有効レイヤーの色へ戻ります。
+3以上のレイヤーを追加した場合は緑を表示します。
+GPIOの対応は赤がP0.26、緑がP0.30、青がP0.06です。
+ZMK v0.3のボード定義では青と緑のラベルが逆ですが、実際の配線に合わせて制御します。
+
+現行基板はUSB-C給電のみのため、給電を外すとLEDも消灯します。
+USB列挙は不要で、LED制御のためにUSB HIDを有効にする必要はありません。
+`settings_reset`ファームウェアにはLED制御を追加しません。
 
 The LED is a power indicator and stays on independently of whether its added
 load prevents power-bank shutdown. It does not guarantee that a power bank will keep its
