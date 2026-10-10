@@ -32,8 +32,9 @@ if(CONFIG_ZMK_BLE)
   endif()
 endif()
 
-# Keep the kb-1 power LED separate from the settings-reset firmware.
+# Keep the kb-1 layer LED separate from the settings-reset firmware.
 if(CONFIG_SHIELD_KB_1)
   zephyr_library()
+  zephyr_library_include_directories("${APPLICATION_SOURCE_DIR}/include")
   zephyr_library_sources(src/power_led.c)
 endif()
